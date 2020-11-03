@@ -4,12 +4,16 @@ import com.example.financecontrol.domain.Role;
 import com.example.financecontrol.domain.User;
 import com.example.financecontrol.repository.UserRepository;
 import com.example.financecontrol.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User getUserByUsername(String username) {

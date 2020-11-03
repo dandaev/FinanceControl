@@ -5,19 +5,21 @@ import com.example.financecontrol.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataLoader implements ApplicationRunner {
 
     private UserService userService;
-    private WebSecurityConfig webSecurityConfig;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public DataLoader(
             UserService userService,
-            WebSecurityConfig webSecurityConfig) {
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.webSecurityConfig = webSecurityConfig;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -25,27 +27,31 @@ public class DataLoader implements ApplicationRunner {
         userService.createUser(
                 "Super Admin",
                 "admin",
-                webSecurityConfig.passwordEncoder().encode("123"),
+                passwordEncoder.encode("123"),
                 Role.ADMIN
         );
-        userService.createUser("Atai Isaev",
+        userService.createUser(
+                "Atai Isaev",
                 "isaev",
-                webSecurityConfig.passwordEncoder().encode("123"),
+                passwordEncoder.encode("123"),
                 Role.USER
         );
-        userService.createUser("Alybek Dandaev",
+        userService.createUser(
+                "Alybek Dandaev",
                 "dandaev",
-                webSecurityConfig.passwordEncoder().encode("123"),
+                passwordEncoder.encode("123"),
                 Role.USER
         );
-        userService.createUser("Bekzhan Satarov",
+        userService.createUser(
+                "Bekzhan Satarov",
                 "satarov",
-                webSecurityConfig.passwordEncoder().encode("123"),
+                passwordEncoder.encode("123"),
                 Role.USER
         );
-        userService.createUser("Bekbolot Nurmanbetov",
+        userService.createUser(
+                "Bekbolot Nurmanbetov",
                 "nurmanbetov",
-                webSecurityConfig.passwordEncoder().encode("123"),
+                passwordEncoder.encode("123"),
                 Role.USER
         );
     }
