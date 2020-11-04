@@ -1,0 +1,21 @@
+package com.example.financecontrol.service;
+
+
+import com.example.financecontrol.domain.Payment;
+import com.example.financecontrol.domain.User;
+
+import java.util.List;
+
+public interface PaymentService {
+
+    boolean createPayment(Double amount, User owner, String check);
+
+    Payment getPaymentById(Integer paymentId);
+
+    boolean updatePayment(Integer paymentId, Double amount, User owner, String check);
+
+    Payment deletePaymentById(Integer paymentId);
+
+    List<Payment> getOwnerPayments(User owner);
+
+}
