@@ -6,6 +6,8 @@ import com.example.financecontrol.repository.UserRepository;
 import com.example.financecontrol.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -53,5 +55,10 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public List<User> listAllUsers() {
+        return userRepository.findAll();
     }
 }
