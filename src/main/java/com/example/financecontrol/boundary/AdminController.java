@@ -37,6 +37,7 @@ public class AdminController {
             authenticatedUser = userService.getUserByUsername(principal.getName());
         }
         model.addAttribute("name", authenticatedUser.getFullname());
+        model.addAttribute("adminid", authenticatedUser.getId());
         List<User> users = new ArrayList<>();
         for (User user : userService.listAllUsers()) {
             if (user.getRole().equals(Role.USER)) {
@@ -66,20 +67,92 @@ public class AdminController {
         if (user == null) {
             redirectAttributes.addFlashAttribute("message", "User not found!");
         } else {
-            if (!user.getFullname().equals(fullname)) {
-                changes += "{" + user.getFullname() + " to " + fullname + "}";
-                user.setFullname(fullname);
+            if (userService.getUserByUsername(username) != null) {
+                redirectAttributes.addFlashAttribute("message", "This username already exists!");
+            } else {
+                if (!user.getFullname().equals(fullname)) {
+                    changes += "{" + user.getFullname() + " to " + fullname + "}";
+                    user.setFullname(fullname);
+                }
+                if (!password.equals(user.getPassword())) {
+                    changes += "{Old Password to " + password + "}";
+                    user.setPassword(passwordEncoder.encode(password));
+                }
+                userService.updateUser(user);
+                if (changes.equals("")) {
+                    redirectAttributes.addFlashAttribute("message", "Nothing changed!");
+                } else {
+                    redirectAttributes.addFlashAttribute("message", "User data successfully updated" + changes);
+                }
             }
-            if (!user.getUsername().equals(username)) {
-                changes += "{" + user.getUsername() + " to " + username + "}";
-                user.setUsername(username);
+        }
+        return redirectView;
+    }
+
+    @PostMapping("/delete/{id}")
+    public RedirectView deleteUserById(
+            @PathVariable Integer id,
+            @RequestParam String password,
+            RedirectAttributes redirectAttributes
+    ) {
+        RedirectView redirectView = new RedirectView("/admin", true);
+        if (passwordEncoder.matches(password, authenticatedUser.getPassword())) {
+            userService.deleteUser(id);
+            redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Incorrect password!");
+        }
+        return redirectView;
+    }
+
+    @PostMapping("/new")
+    public RedirectView createNewUser(
+            RedirectAttributes redirectAttributes,
+            @RequestParam String fullname,
+            @RequestParam String username,
+            @RequestParam String password,
+            @RequestParam String confirmPassword
+    ) {
+        RedirectView redirectView = new RedirectView("/admin", true);
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
+            if (password.equals(confirmPassword)) {
+                userService.createUser(
+                        fullname,
+                        username,
+                        password,
+                        Role.USER
+                );
+                redirectAttributes.addFlashAttribute("message", "User added successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "Passwords do not match!");
             }
-            if (!passwordEncoder.matches(password, user.getPassword())) {
-                changes += "{Old Password to " + password + "}";
-                user.setPassword(passwordEncoder.encode(password));
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Username already exists!");
+        }
+        return redirectView;
+    }
+
+    @PostMapping("/changepass/{adminid}")
+    public RedirectView changeAdminPassword(
+            @PathVariable Integer adminid,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmNewPassword,
+            RedirectAttributes redirectAttributes
+    ) {
+        RedirectView redirectView = new RedirectView("/admin", true);
+        User user = userService.getUserById(adminid);
+        if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+            if (newPassword.equals(confirmNewPassword)) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userService.updateUser(user);
+                redirectAttributes.addFlashAttribute("message", "Password updated!");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "Passwords do not match!");
             }
-            userService.updateUser(user);
-            redirectAttributes.addFlashAttribute("message", "User data successfully updated" + changes);
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Incorrect password, try again!");
         }
         return redirectView;
     }

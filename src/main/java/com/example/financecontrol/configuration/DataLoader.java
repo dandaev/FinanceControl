@@ -25,7 +25,7 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         userService.createUser(
-                "Super Admin",
+                "Admin Adminovic",
                 "admin",
                 passwordEncoder.encode("123"),
                 Role.ADMIN

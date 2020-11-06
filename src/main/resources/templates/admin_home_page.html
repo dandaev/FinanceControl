@@ -21,8 +21,84 @@
     <br>
     <p>
         <span th:text="${name}" class="font-weight-bold"></span>
-        <a th:href="@{/logout}" class="btn float-right ml-3">Logout</a>
-        <a href="#" class="btn float-right">New User</a>
+        <a th:href="@{/logout}" class="btn float-right btn-link ml-3">Logout</a>
+        <a href="#" class="btn float-right btn-link ml-3" data-toggle="modal" data-target="#exampleModalNewUser">New User</a>
+        <a href="#" class="btn float-right btn-link" data-toggle="modal" data-target="#exampleModalChangePass">Change Password</a>
+        <div class="modal fade" id="exampleModalNewUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelNewUser" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelNewUser">Adding new user to system</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/admin/new}" th:method="post">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="fullname" type="text" class="form-control" id="fullname" placeholder="Full Name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="username" type="text" class="form-control" id="username" placeholder="Unique Username">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalChangePass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelChangePass" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelChangePass">Changing my password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/admin/changepass/{adminid}(adminid=${adminid})}" th:method="post">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="currentPassword" type="password" class="form-control" id="currentPassword" placeholder="Current Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="newPassword" type="password" class="form-control" id="newPassword" placeholder="New Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="confirmNewPassword" type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm New Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Update My Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </p>
     <br>
     <br>
@@ -30,7 +106,7 @@
         <div class="card mb-3" th:each="user : ${users}">
             <div class="card-header" th:id="${'heading' + user.getId()}">
                 <h5 class="mb-0">
-                    <button class="btn btn-link collapsed btn-block btn-no-outline" data-toggle="collapse" th:data-target="${'#' + 'collapse' + user.getId()}" aria-expanded="false" th:aria-controls="${'collapse' + user.getId()}">
+                    <button class="btn btn-link collapsed btn-block btn-no-outline text-secondary" data-toggle="collapse" th:data-target="${'#' + 'collapse' + user.getId()}" aria-expanded="false" th:aria-controls="${'collapse' + user.getId()}">
                         <span th:text="${user.getFullname()}">Collapsible Group Item</span>
                     </button>
                 </h5>
@@ -72,13 +148,37 @@
                         <div class="row">
                             <div class="col-sm-6"></div>
                             <div class="col-sm-2">
+                                <button type="button" data-toggle="modal" class="btn btn-danger btn-block" th:data-target="${'#delete' + user.getUsername()}">Delete</button>
+                            </div>
+                            <div class="col-sm-2">
                                 <button type="reset" class="btn btn-info btn-block">Reset</button>
                             </div>
-                            <div class="col-sm-4">
-                                <button type="submit" class="btn btn-success btn-block">Yes, I want to update!</button>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-success btn-block">Update User</button>
                             </div>
                         </div>
                     </form>
+                    <div class="modal fade" th:id="${'delete' + user.getUsername()}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form th:action="@{/admin/delete/{id}(id=${user.getId()})}" method="POST">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <h3>Are you sure to delete user <strong th:text="${user.getUsername()}"></strong></h3>
+                                            <label for="adminPassword" class="col-form-label">Your Password</label>
+                                            <div class="">
+                                                <input th:name="password" type="password" class="form-control" id="adminPassword" placeholder="Password" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
