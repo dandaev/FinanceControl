@@ -10,75 +10,181 @@
 <body>
 
 <div class="container">
+    <div th:if="${message}" class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
+        <span th:text="${message}">This is a primary alert—check it out!</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <br>
     <br>
     <br>
-    <h2>This app administrating now by <span th:text="${name}" class="font-weight-bold"></span></h2>
+    <p>
+        <span th:text="${name}" class="font-weight-bold"></span>
+        <a th:href="@{/logout}" class="btn float-right btn-link ml-3">Logout</a>
+        <a href="#" class="btn float-right btn-link ml-3" data-toggle="modal" data-target="#exampleModalNewUser">New User</a>
+        <a href="#" class="btn float-right btn-link" data-toggle="modal" data-target="#exampleModalChangePass">Change Password</a>
+        <div class="modal fade" id="exampleModalNewUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelNewUser" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelNewUser">Adding new user to system</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/admin/new}" th:method="post">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="fullname" type="text" class="form-control" id="fullname" placeholder="Full Name">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="username" type="text" class="form-control" id="username" placeholder="Unique Username">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalChangePass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelChangePass" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelChangePass">Changing my password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/admin/changepass/{adminid}(adminid=${adminid})}" th:method="post">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="currentPassword" type="password" class="form-control" id="currentPassword" placeholder="Current Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="newPassword" type="password" class="form-control" id="newPassword" placeholder="New Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <input name="confirmNewPassword" type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm New Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Update My Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </p>
+    <br>
     <br>
     <div id="accordion">
-        <div class="card" th:each="user : ${users}">
-            <div class="card-header" th:id="${user.getId()}">
+        <div class="card mb-3" th:each="user : ${users}">
+            <div class="card-header" th:id="${'heading' + user.getId()}">
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" th:data-target="${'#' + user.getId()}" aria-expanded="false" th:aria-controls="${user.getId()}">
+                    <button class="btn btn-link collapsed btn-block btn-no-outline text-secondary" data-toggle="collapse" th:data-target="${'#' + 'collapse' + user.getId()}" aria-expanded="false" th:aria-controls="${'collapse' + user.getId()}">
                         <span th:text="${user.getFullname()}">Collapsible Group Item</span>
                     </button>
                 </h5>
             </div>
 
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div th:id="${'collapse' + user.getId()}" class="collapse" th:aria-labelledby="${'heading' + user.getId()}" data-parent="#accordion">
                 <div class="card-body">
-                    <p th:text="${user.getId()}"></p>
-                    <p th:text="${user.getFullname()}"></p>
-                    <p th:text="${user.getUsername()}"></p>
-                    <p th:text="${user.getPassword()}"></p>
-                    <p th:text="${user.getId()}"></p>
+                    <form th:action="@{/admin/update/{id}(id=${user.getId()})}" method="POST" class="form-horizontal">
+                        <div class="form-group row">
+                            <label for="inputId" class="col-sm-2 col-form-label">User Id</label>
+                            <div class="col-sm-10">
+                                <input th:value="${user.getId()}" type="text" class="form-control" id="inputId" placeholder="Id" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputRole" class="col-sm-2 col-form-label">Role</label>
+                            <div class="col-sm-10">
+                                <input th:value="${user.getRole()}" type="text" class="form-control" id="inputRole" placeholder="User Role" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputFullname" class="col-sm-2 col-form-label">Full Name</label>
+                            <div class="col-sm-10">
+                                <input th:name="fullname" th:value="${user.getFullname()}" type="text" class="form-control" id="inputFullname" placeholder="Full Name">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
+                            <div class="col-sm-10">
+                                <input th:name="username" th:value="${user.getUsername()}" type="text" class="form-control" id="inputUsername" placeholder="Username">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-10">
+                                <input th:name="password" th:value="${user.getPassword()}" type="password" class="form-control" id="inputPassword" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6"></div>
+                            <div class="col-sm-2">
+                                <button type="button" data-toggle="modal" class="btn btn-danger btn-block" th:data-target="${'#delete' + user.getUsername()}">Delete</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="reset" class="btn btn-info btn-block">Reset</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-success btn-block">Update User</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal fade" th:id="${'delete' + user.getUsername()}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form th:action="@{/admin/delete/{id}(id=${user.getId()})}" method="POST">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <h3>Are you sure to delete user <strong th:text="${user.getUsername()}"></strong></h3>
+                                            <label for="adminPassword" class="col-form-label">Your Password</label>
+                                            <div class="">
+                                                <input th:name="password" type="password" class="form-control" id="adminPassword" placeholder="Password" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-<!--        <div class="card">-->
-<!--            <div class="card-header" id="headingOne">-->
-<!--                <h5 class="mb-0">-->
-<!--                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">-->
-<!--                        Collapsible Group Item #1-->
-<!--                    </button>-->
-<!--                </h5>-->
-<!--            </div>-->
-
-<!--            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">-->
-<!--                <div class="card-body">-->
-<!--                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="card">-->
-<!--            <div class="card-header" id="headingTwo">-->
-<!--                <h5 class="mb-0">-->
-<!--                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">-->
-<!--                        Collapsible Group Item #2-->
-<!--                    </button>-->
-<!--                </h5>-->
-<!--            </div>-->
-<!--            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">-->
-<!--                <div class="card-body">-->
-<!--                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="card">-->
-<!--            <div class="card-header" id="headingThree">-->
-<!--                <h5 class="mb-0">-->
-<!--                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">-->
-<!--                        Collapsible Group Item #3-->
-<!--                    </button>-->
-<!--                </h5>-->
-<!--            </div>-->
-<!--            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">-->
-<!--                <div class="card-body">-->
-<!--                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
     </div>
+
+
 </div>
 
 <script type="text/javascript" th:src="@{/js/bootstrap/jquery.min.js}" crossorigin="anonymous"></script>

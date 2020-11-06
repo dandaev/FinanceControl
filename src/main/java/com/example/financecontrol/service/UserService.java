@@ -11,4 +11,5 @@ public interface UserService {
     public User deleteUser(Integer id);
     public boolean updateUser(User user);
     List<User> listAllUsers();
+    User getUserById(Integer id);
 }
