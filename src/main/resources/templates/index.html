@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.min.css}" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <title>Hello, world!</title>
+    <style type="text/css">
+        body {
+            background-color: #EEE;
+        }
+
+        @media (min-width: 500px) {
+            .container {
+                max-width: 500px;
+            }
+        }
+
+        .foo {
+            font-family: 'Syne Mono', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br>
+
+        <nav class="section row">
+            <div class="col-10">
+                <h5 class="foo">
+                    <span>Bekzhan Satarov</span>
+                    -
+                    <span>58.96 €</span>
+                </h5>
+            </div>
+            <div class="col-2">
+                <h5 class="float-right foo">
+                    <a href="#" class="text-danger">exit</a>
+                </h5>
+            </div>
+        </nav>
+
+        <br>
+        <br>
+
+        <section class="section">
+            <div class="row">
+                <div class="col-8">
+                    <p>Alybek Dandaev</p>
+                </div>
+                <div class="col-4">
+                    <p class="float-right">12.54 €</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <p>Atai Isaev</p>
+                </div>
+                <div class="col-4">
+                    <p class="float-right">8.32 €</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <p>Bekbolot Nurmanbetov</p>
+                </div>
+                <div class="col-4">
+                    <p class="float-right">-14.00 €</p>
+                </div>
+            </div>
+        </section>
+
+        <br>
+        <br>
+
+        <section class="section border border-secondary rounded-lg p-3">
+            <form action="#">
+                <div class="form-group row">
+                    <label for="amount" class="col-3 col-form-label">Amount: </label>
+                    <div class="col-9">
+                        <input class="form-control" id="amount" type="number" name="" value="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="cheque" class="col-3 col-form-label">Cheque: </label>
+                    <div class="col-9">
+                        <div class="custom-file">
+                            <input id="cheque" type="file" class="custom-file-input">
+                            <label class="custom-file-label" for="cheque" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-12">
+                        <input type="checkbox" aria-label="checkbox">
+                        <span class="float-right">Alybek Dandaev</span>
+                    </label>
+                    <label class="col-12">
+                        <input type="checkbox" aria-label="checkbox">
+                        <span class="float-right">Atai Isaev</span>
+                    </label>
+                    <label class="col-12">
+                        <input type="checkbox" aria-label="checkbox">
+                        <span class="float-right">Bekbolot Nurmanbetov</span>
+                    </label>
+                    <label class="col-12">
+                        <input type="checkbox" aria-label="checkbox">
+                        <span class="float-right">Bekzhan Satarov</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-secondary btn-block" name="button">Append</button>
+            </form>
+        </section>
+        <br>
+        <br>
+        <br>
+
+        <section class="section">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img th:src="@{/img/chaeque.jpg}" class="card-img" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Atai Isaev (19.99 €)</h5>
+                            <p class="card-text">
+                            <div>Bekzhan Satarov</div>
+                            <div>Alybek Dandaev</div>
+                            <div>Bekbolot Nurmanbetov</div>
+                            <div>Atai Isaev</div>
+                            </p>
+                            <p class="card-text"><small class="text-muted">at 06.11.2020 18.34</small></p>
+                            <a class="btn btn-success btn-block" href="#">Confirm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="text/javascript" th:src="@{/js/bootstrap/jquery.min.js}" crossorigin="anonymous"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap/bootstrap.bundle.min.js}" crossorigin="anonymous"></script>
+</body>
+
+</html>
