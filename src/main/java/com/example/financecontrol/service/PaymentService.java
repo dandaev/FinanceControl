@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PaymentService {
 
-    boolean createPayment(Double amount, User owner, String check);
+    boolean createPayment(Payment payment);
 
     Payment getPaymentById(Integer paymentId);
 

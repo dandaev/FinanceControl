@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
-public interface PaymentRepository extends JpaRepository< Payment, Integer > {
+@Repository
+public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
     Payment getPaymentById(Integer paymentId);
 

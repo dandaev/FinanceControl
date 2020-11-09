@@ -1,27 +1,25 @@
 package com.example.financecontrol.domain;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
     private Timestamp date;
     private Double amount;
     @ManyToOne
     private User owner;
-    private String check;
+    private String cheque;
 
-    public Payment(Double amount, User owner, String check) {
+    public Payment(Double amount, User owner, String cheque) {
         this.date = new Timestamp(System.currentTimeMillis());
         this.amount = amount;
         this.owner = owner;
-        this.check = check;
+        this.cheque = cheque;
     }
 
     public Payment() {
@@ -51,11 +49,11 @@ public class Payment {
         this.owner = owner;
     }
 
-    public String getCheck() {
-        return check;
+    public String getCheque() {
+        return cheque;
     }
 
-    public void setCheck(String check) {
-        this.check = check;
+    public void setCheque(String cheque) {
+        this.cheque = cheque;
     }
 }

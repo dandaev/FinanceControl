@@ -5,14 +5,13 @@ import javax.persistence.*;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String fullname;
     private String username;
     private String password;
     private boolean enabled;
     private Role role;
-
     public User() {
     }
 
