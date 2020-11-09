@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -91,5 +92,28 @@ public class StockServiceImpl implements StockService {
             return null;
         }
 
+    }
+
+    @Override
+    public List<Stock> getAllUnconfirmedStocksByUserId(Integer user_id) {
+        List<Stock> unconfirmedStocks = new ArrayList<>();
+        for (Stock stock:stockRepository.findAll()) {
+            if ((!stock.isConfirmation()) && (stock.getSharer().getId().equals(user_id))) {
+                unconfirmedStocks.add(stock);
+            }
+        }
+        return unconfirmedStocks;
+    }
+
+    @Override
+    public List<Stock> getAllStocks() {
+        return stockRepository.findAll();
+    }
+
+    @Override
+    public void confirmStockSharing(Integer stock_id) {
+        Stock stock = stockRepository.getStockById(stock_id);
+        stock.setConfirmation(true);
+        stockRepository.save(stock);
     }
 }

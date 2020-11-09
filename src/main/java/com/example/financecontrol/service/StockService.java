@@ -22,4 +22,10 @@ public interface StockService {
 
     String getUserSpendMoney(User authenticatedUser);
 
+    List<Stock> getAllUnconfirmedStocksByUserId(Integer user_id);
+
+    List<Stock> getAllStocks();
+
+    void confirmStockSharing(Integer stock_id);
+
 }
