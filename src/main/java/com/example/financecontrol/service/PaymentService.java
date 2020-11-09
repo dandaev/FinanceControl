@@ -12,7 +12,7 @@ public interface PaymentService {
 
     Payment getPaymentById(Integer paymentId);
 
-    boolean updatePayment(Integer paymentId, Double amount, User owner, String check);
+    boolean updatePayment(Integer paymentId, Double amount, User owner, byte[] check);
 
     Payment deletePaymentById(Integer paymentId);
 

@@ -63,7 +63,7 @@
         <br>
 
         <section class="section border border-secondary rounded-lg p-3">
-            <form th:action="@{/add}" method="post" >
+            <form th:action="@{/add}" method="post" enctype="multipart/form-data">
                 <div class="form-group row">
                     <label for="amount" class="col-3 col-form-label">Amount: </label>
                     <div class="col-9">
@@ -74,9 +74,8 @@
                     <label for="cheque" class="col-3 col-form-label">Cheque: </label>
                     <div class="col-9">
                         <div class="custom-file">
-                            <input id="cheque" type="text" name="check">
-<!--                            <input id="cheque" type="file" class="custom-file-input" name="check">-->
-<!--                            <label class="custom-file-label" for="cheque" aria-describedby="inputGroupFileAddon02">Choose file</label>-->
+                            <input id="cheque" type="file" accept="image/vnd.sealedmedia.softseal.jpg" class="custom-file-input" name="file">
+                            <label class="custom-file-label" for="cheque" aria-describedby="inputGroupFileAddon02">Max size 2MB and type .jpg</label>
                         </div>
                     </div>
                 </div>
@@ -94,22 +93,24 @@
         <br>
 
         <section class="section">
-            <div class="card mb-3" style="max-width: 540px;">
+            <div th:each="stock : ${unconfirmed_stocks}" class="card mb-3" style="max-width: 540px;">
                 <div class="row no-gutters">
                     <div class="col-md-4">
-                        <img th:src="@{/img/chaeque.jpg}" class="card-img" alt="...">
+                        <img th:src="@{/image/{payment_id}(payment_id=${stock.getPayment().getId()})}" class="card-img" alt="...">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">Atai Isaev (19.99 €)</h5>
+                            <h5 class="card-title">
+                                <span th:text="${stock.getPayment().getOwner().getFullname()}"></span>
+                                (<span th:text="${stock.getPayment().getAmount()}"></span> €)
+                            </h5>
                             <p class="card-text">
-                            <div>Bekzhan Satarov</div>
-                            <div>Alybek Dandaev</div>
-                            <div>Bekbolot Nurmanbetov</div>
-                            <div>Atai Isaev</div>
+                                <div th:each="s : ${stocks}">
+                                    <span th:if="${s.getPayment().getId().equals(stock.getPayment().getId())}" th:text="${s.getSharer().getFullname()}"></span>
+                                </div>
                             </p>
-                            <p class="card-text"><small class="text-muted">at 06.11.2020 18.34</small></p>
-                            <a class="btn btn-success btn-block" href="#">Confirm</a>
+                            <p class="card-text"><small class="text-muted">at <span th:text="${stock.getPayment().getDate()}"></span></small></p>
+                            <a class="btn btn-success btn-block" th:href="@{/confirm_sharing/{user_id}/{stock_id}(user_id=${authenticatedUser.getId()},stock_id=${stock.getId()})}">Confirm</a>
                         </div>
                     </div>
                 </div>

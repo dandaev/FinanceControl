@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean updatePayment(Integer paymentId, Double amount, User owner, String check) {
+    public boolean updatePayment(Integer paymentId, Double amount, User owner, byte[] check) {
         Payment payment = paymentRepository.getPaymentById(paymentId);
         if (payment == null){
             return false;

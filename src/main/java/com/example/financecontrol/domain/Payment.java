@@ -13,9 +13,10 @@ public class Payment {
     private Double amount;
     @ManyToOne
     private User owner;
-    private String cheque;
+    @Lob
+    private byte[] cheque;
 
-    public Payment(Double amount, User owner, String cheque) {
+    public Payment(Double amount, User owner, byte[] cheque) {
         this.date = new Timestamp(System.currentTimeMillis());
         this.amount = amount;
         this.owner = owner;
@@ -49,11 +50,11 @@ public class Payment {
         this.owner = owner;
     }
 
-    public String getCheque() {
+    public byte[] getCheque() {
         return cheque;
     }
 
-    public void setCheque(String cheque) {
+    public void setCheque(byte[] cheque) {
         this.cheque = cheque;
     }
 }
