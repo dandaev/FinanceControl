@@ -8,12 +8,13 @@ import com.example.financecontrol.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Service
 public class StockServiceImpl implements StockService {
 
-    private StockRepository stockRepository;
+    private final StockRepository stockRepository;
 
     @Autowired
     public StockServiceImpl(StockRepository stockRepository) {
@@ -57,18 +58,38 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<Stock> getPaymentSharers(Payment payment) {
-        List<Stock> stockList = stockRepository.getStocksByPaymentId(payment.getId());
-        if (stockList.isEmpty())
+    public List<Stock> getPaymentById(Payment payment) {
+        try {
+            return stockRepository.getStocksByPaymentId(payment.getId());
+        }
+        catch (NullPointerException e){
             return null;
-        return stockList;
+        }
     }
 
     @Override
     public List<Stock> getUserDebs(User sharer) {
-        List<Stock> stockList = stockRepository.getStocksBySharerId(sharer.getId());
-        if (stockList.isEmpty())
+        try {
+            return stockRepository.getStocksBySharerId(sharer.getId());
+        }catch (NullPointerException e){
             return null;
-        return stockList;
+        }
+    }
+
+    @Override
+    public String getUserSpendMoney(User authenticatedUser){
+        double spendMoney = 0.0;
+        try {
+            List<Stock> userDebsList = getUserDebs(authenticatedUser);
+            for (Stock stock: userDebsList){
+                List<Stock> paymentSharersList = getPaymentById(stock.getPayment());
+                spendMoney += stock.getPayment().getAmount() / paymentSharersList.size();
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("###.##");
+            return decimalFormat.format(spendMoney);
+        }catch (NullPointerException e){
+            return null;
+        }
+
     }
 }

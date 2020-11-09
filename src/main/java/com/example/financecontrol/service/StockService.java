@@ -16,8 +16,10 @@ public interface StockService {
 
     Stock deleteStockById(Integer stockId);
 
-    List<Stock> getPaymentSharers(Payment paymentId);
+    List<Stock> getPaymentById(Payment paymentId);
 
     List<Stock> getUserDebs(User userId);
+
+    String getUserSpendMoney(User authenticatedUser);
 
 }

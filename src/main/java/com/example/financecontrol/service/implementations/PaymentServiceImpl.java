@@ -4,7 +4,6 @@ import com.example.financecontrol.domain.Payment;
 import com.example.financecontrol.domain.User;
 import com.example.financecontrol.repository.PaymentRepository;
 import com.example.financecontrol.service.PaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,16 +11,14 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
-    @Autowired
     public PaymentServiceImpl(PaymentRepository paymentRepository) {
         this.paymentRepository = paymentRepository;
     }
 
     @Override
-    public boolean createPayment(Double amount, User owner, String check) {
-        Payment payment = new Payment(amount, owner, check);
+    public boolean createPayment(Payment payment) {
         paymentRepository.save(payment);
         return true;
     }
@@ -29,10 +26,10 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment getPaymentById(Integer paymentId) {
         Payment payment = paymentRepository.getPaymentById(paymentId);
-        if (payment == null){
-            return null;
+        if (payment != null){
+            return payment;
         }
-        return payment;
+        return null;
     }
 
     @Override
@@ -43,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         payment.setAmount(amount);
         payment.setOwner(owner);
-        payment.setCheck(check);
+        payment.setCheque(check);
         paymentRepository.save(payment);
         return true;
     }
